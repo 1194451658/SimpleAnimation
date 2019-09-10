@@ -19,7 +19,7 @@ public class SimpleAnimationTests
         public void GetStates_WithNoStates_IEnumerator_MoveNext_ReturnsFalse()
         {
             SimpleAnimation animation = Instantiate();
-            IEnumerable<SimpleAnimation.State> states = animation.GetStates();
+            IEnumerable<State> states = animation.GetStates();
             var it = states.GetEnumerator();
             Assert.IsFalse(it.MoveNext());
         }
@@ -28,9 +28,9 @@ public class SimpleAnimationTests
         public void GetStates_WithNoStates_IEnumerator_Current_Throws()
         {
             SimpleAnimation animation = Instantiate();
-            IEnumerable<SimpleAnimation.State> states = animation.GetStates();
+            IEnumerable<State> states = animation.GetStates();
             var it = states.GetEnumerator();
-            Assert.Throws<InvalidOperationException>(() => { SimpleAnimation.State state = it.Current; });
+            Assert.Throws<InvalidOperationException>(() => { State state = it.Current; });
         }
 
         [Test]
@@ -41,10 +41,10 @@ public class SimpleAnimationTests
             var clipInstance = Object.Instantiate<AnimationClip>(clip);
 
             animation.AddClip(clipInstance, "SingleClip");
-            IEnumerable<SimpleAnimation.State> states = animation.GetStates();
+            IEnumerable<State> states = animation.GetStates();
             var it = states.GetEnumerator();
             it.MoveNext();
-            SimpleAnimation.State state = it.Current;
+            State state = it.Current;
             Assert.AreEqual("SingleClip", state.name);
         }
 
@@ -56,7 +56,7 @@ public class SimpleAnimationTests
             var clipInstance = Object.Instantiate<AnimationClip>(clip);
 
             animation.AddClip(clipInstance, "SingleClip");
-            IEnumerable<SimpleAnimation.State> states = animation.GetStates();
+            IEnumerable<State> states = animation.GetStates();
             var it = states.GetEnumerator();
             animation.RemoveState("SingleClip");
             Assert.Throws<InvalidOperationException>(() => { it.MoveNext(); });

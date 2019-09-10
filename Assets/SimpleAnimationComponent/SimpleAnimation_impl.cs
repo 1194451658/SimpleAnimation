@@ -11,142 +11,9 @@ using UnityEngine.Playables;
 public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
 {
     const string kDefaultStateName = "Default";
-    private class StateEnumerable : IEnumerable<State>
-    {
-        private SimpleAnimation m_Owner;
-        public StateEnumerable(SimpleAnimation owner)
-        {
-            m_Owner = owner;
-        }
-
-        public IEnumerator<State> GetEnumerator()
-        {
-            return new StateEnumerator(m_Owner);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return new StateEnumerator(m_Owner);
-        }
-
-        class StateEnumerator : IEnumerator<State>
-        {
-            private SimpleAnimation m_Owner;
-            private IEnumerator<SimpleAnimationPlayable.IState> m_Impl;
-            public StateEnumerator(SimpleAnimation owner)
-            {
-                m_Owner = owner;
-                m_Impl = m_Owner.m_Playable.GetStates().GetEnumerator();
-                Reset();
-            }
-
-            State GetCurrent()
-            {
-                return new StateImpl(m_Impl.Current, m_Owner);
-            }
-
-            object IEnumerator.Current { get { return GetCurrent(); } }
-
-            State IEnumerator<State>.Current { get { return GetCurrent(); } }
-
-            public void Dispose() { }
-
-            public bool MoveNext()
-            {
-                return m_Impl.MoveNext();
-            }
-
-            public void Reset()
-            {
-                m_Impl.Reset();
-            }
-        }
-    }
-    private class StateImpl : State
-    {
-        public StateImpl(SimpleAnimationPlayable.IState handle, SimpleAnimation component)
-        {
-            m_StateHandle = handle;
-            m_Component = component;
-        }
-
-        private SimpleAnimationPlayable.IState m_StateHandle;
-        private SimpleAnimation m_Component;
-
-        bool State.enabled
-        {
-            get { return m_StateHandle.enabled; }
-            set
-            {
-                m_StateHandle.enabled = value;
-                if (value)
-                {
-                    m_Component.Kick();
-                }
-            }
-        }
-
-        bool State.isValid
-        {
-            get { return m_StateHandle.IsValid(); }
-        }
-        float State.time
-        {
-            get { return m_StateHandle.time; }
-            set { m_StateHandle.time = value;
-                m_Component.Kick(); }
-        }
-        float State.normalizedTime
-        {
-            get { return m_StateHandle.normalizedTime; }
-            set { m_StateHandle.normalizedTime = value;
-                  m_Component.Kick();}
-        }
-        float State.speed
-        {
-            get { return m_StateHandle.speed; }
-            set { m_StateHandle.speed = value;
-                  m_Component.Kick();}
-        }
-
-        string State.name
-        {
-            get { return m_StateHandle.name; }
-            set { m_StateHandle.name = value; }
-        }
-        float State.weight
-        {
-            get { return m_StateHandle.weight; }
-            set { m_StateHandle.weight = value;
-                m_Component.Kick();}
-        }
-        float State.length
-        {
-            get { return m_StateHandle.length; }
-        }
-
-        AnimationClip State.clip
-        {
-            get { return m_StateHandle.clip; }
-        }
-
-        WrapMode State.wrapMode
-        {
-            get { return m_StateHandle.wrapMode; }
-            set { Debug.LogError("Not Implemented"); }
-        }
-    }
-
-    [System.Serializable]
-    public class EditorState
-    {
-        public AnimationClip clip;
-        public string name;
-        public bool defaultState;
-    }
-
+    
     // 开始播放
-    protected void Kick()
+    public void Kick()
     {
         if (!m_IsPlaying)
         {
@@ -163,6 +30,11 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
     protected bool m_IsPlaying;
 
     protected SimpleAnimationPlayable m_Playable;
+
+    public SimpleAnimationPlayable Playable
+    {
+        get { return m_Playable; }
+    }
 
     [SerializeField]
     protected bool m_PlayAutomatically = true;

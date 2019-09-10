@@ -7,12 +7,12 @@ public class SimpleAnimationProxy : MonoBehaviour, IAnimation
 {
     private class SimpleAnimationStateProxy: IAnimationState
     {
-        public SimpleAnimationStateProxy(SimpleAnimation.State state)
+        public SimpleAnimationStateProxy(State state)
         {
             m_State = state;
         }
 
-        private SimpleAnimation.State m_State;
+        private State m_State;
 
         public bool enabled
         {
@@ -215,7 +215,7 @@ public class SimpleAnimationProxy : MonoBehaviour, IAnimation
 
     public IAnimationState GetState(string stateName)
     {
-        SimpleAnimation.State state = impl[stateName];
+        State state = impl[stateName];
         if (state != null)
             return new SimpleAnimationStateProxy(state);
 

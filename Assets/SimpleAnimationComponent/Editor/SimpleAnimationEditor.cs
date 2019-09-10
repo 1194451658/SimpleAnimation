@@ -45,7 +45,7 @@ public class SimpleAnimationEditor : Editor
     
 }
 
-[CustomPropertyDrawer(typeof(SimpleAnimation.EditorState))]
+[CustomPropertyDrawer(typeof(EditorState))]
 class StateDrawer : PropertyDrawer
 {
     class Styles

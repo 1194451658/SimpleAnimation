@@ -7,23 +7,6 @@ using UnityEngine.Playables;
 [RequireComponent(typeof(Animator))]
 public partial class SimpleAnimation: MonoBehaviour
 {
-    // 动作状态
-    // Q: 同SimpleAnimationPlayable_States.cs中的IState
-    public interface State
-    {
-        bool enabled { get; set; }
-        bool isValid { get; }
-        float time { get; set; }
-        float normalizedTime { get; set; }
-        float speed { get; set; }
-        string name { get; set; }
-        float weight { get; set; }
-        float length { get; }
-        AnimationClip clip { get; }
-        WrapMode wrapMode { get; set; }
-
-    }
-
     // 缓存控制的Animator
     public Animator animator
     {
@@ -207,7 +190,7 @@ public partial class SimpleAnimation: MonoBehaviour
 
     public State GetState(string stateName)
     {
-        SimpleAnimationPlayable.IState state = m_Playable.GetState(stateName);
+        IState state = m_Playable.GetState(stateName);
         if (state == null)
             return null;
 

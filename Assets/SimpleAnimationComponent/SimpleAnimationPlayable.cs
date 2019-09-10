@@ -8,10 +8,17 @@ using System;
 public partial class SimpleAnimationPlayable : PlayableBehaviour
 {
     LinkedList<QueuedState> m_StateQueue;
-    StateManagement m_States;
+    private StateManagement m_States;
     bool m_Initialized;
 
-    bool m_KeepStoppedPlayablesConnected = true;
+    private bool m_KeepStoppedPlayablesConnected = true;
+
+    public StateManagement States
+    {
+        get { return m_States; }
+    }
+
+
     public bool keepStoppedPlayablesConnected
     {
         get { return m_KeepStoppedPlayablesConnected; }
@@ -80,7 +87,7 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
 
     public IEnumerable<IState> GetStates()
     {
-        return new StateEnumerable(this);
+        return new IStateEnumerable(this);
     }
 
     public IState GetState(string name)
