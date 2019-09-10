@@ -124,6 +124,7 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
         return newState;
     }
 
+    // 添加Clip
     public bool AddClip(AnimationClip clip, string name)
     {
         StateInfo state = m_States.FindState(name);

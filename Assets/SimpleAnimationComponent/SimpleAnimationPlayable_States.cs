@@ -83,6 +83,7 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
         }
     }
     
+    // Q: 同SimpleAnimation中的State?
     public interface IState
     {
         bool IsValid();
@@ -275,6 +276,61 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
 
     private class StateInfo
     {
+        // 状态名称
+        private string m_StateName;
+
+        // 要播放的动画Clip
+        private AnimationClip m_Clip;
+
+        // 循环模式
+        private WrapMode m_WrapMode;
+
+        // 当前Playable时间
+        private float m_Time;
+
+        private bool m_Fading;
+
+        // FadeTo，到达目标weight时间
+        float m_FadeSpeed;
+        // 当前weight
+        float m_Weight;
+        // 目标weight
+        private float m_TargetWeight;
+
+        private int m_Index;
+
+        private Playable m_Playable;
+        k
+        private bool m_IsClone;
+
+        private bool m_ReadyForCleanup;
+
+        public StateHandle m_ParentState;
+
+        private bool m_WeightDirty;
+
+        private bool m_Enabled;
+        // Enable()被调用了
+        private bool m_EnabledDirty;
+
+        private bool m_TimeIsUpToDate;
+
+        public string stateName
+        {
+            get { return m_StateName; }
+            set { m_StateName = value; }
+        }
+
+        public AnimationClip clip
+        {
+            get { return m_Clip; }
+        }
+
+        public WrapMode wrapMode
+        {
+            get { return m_WrapMode; }
+        }
+
         public void Initialize(string name, AnimationClip clip, WrapMode wrapMode)
         {
             m_StateName = name;
@@ -282,6 +338,7 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             m_WrapMode = wrapMode;
         }
 
+        // 获取当前Playable时间
         public float GetTime()
         {
             if (m_TimeIsUpToDate)
@@ -292,6 +349,7 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             return m_Time;
         }
 
+        // 重新设置Playable时间
         public void SetTime(float newTime)
         {
             m_Time = newTime;
@@ -317,11 +375,13 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             m_Enabled = false;
         }
 
+        // 暂停Playable
         public void Pause()
         {
             m_Playable.SetPlayState(PlayState.Paused);
         }
 
+        // 播放Playable
         public void Play()
         {
             m_Playable.SetPlayState(PlayState.Playing);
@@ -354,6 +414,7 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             m_WeightDirty = true;
         }
 
+        // 到达目标weight
         public void FadeTo(float weight, float speed)
         {
             m_Fading = Mathf.Abs(speed) > 0f;
@@ -361,6 +422,7 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             m_TargetWeight = weight;
         }
 
+        // 销毁playable
         public void DestroyPlayable()
         {
             if (m_Playable.IsValid())
@@ -369,6 +431,7 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             }
         }
 
+        // Q: ??
         public void SetAsCloneOf(StateHandle handle)
         {
             m_ParentState = handle;
@@ -380,7 +443,6 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             get { return m_Enabled; }
         }
 
-        private bool m_Enabled;
 
         public int index
         {
@@ -392,46 +454,25 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             }
         }
 
-        private int m_Index;
-
-        public string stateName
-        {
-            get { return m_StateName; }
-            set { m_StateName = value; }
-        }
-
-        private string m_StateName;
-
         public bool fading
         {
             get { return m_Fading; }
         }
-
-        private bool m_Fading;
-
-
-        private float m_Time;
 
         public float targetWeight
         {
             get { return m_TargetWeight; }
         }
 
-        private float m_TargetWeight;
-
         public float weight
         {
             get { return m_Weight; }
         }
 
-        float m_Weight;
-
         public float fadeSpeed
         {
             get { return m_FadeSpeed; }
         }
-
-        float m_FadeSpeed;
 
         public float speed
         {
@@ -443,13 +484,6 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
         {
             get { return (float)m_Playable.GetDuration(); }
         }
-
-        public AnimationClip clip
-        {
-            get { return m_Clip; }
-        }
-
-        private AnimationClip m_Clip;
 
         public void SetPlayable(Playable playable)
         {
@@ -463,36 +497,21 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             get { return m_Playable; }
         }
 
-        private Playable m_Playable;
-
-        public WrapMode wrapMode
-        {
-            get { return m_WrapMode; }
-        }
-
-        private WrapMode m_WrapMode;
-
         //Clone information
         public bool isClone
         {
             get { return m_IsClone; }
         }
 
-        private bool m_IsClone;
-
         public bool isReadyForCleanup
         {
             get { return m_ReadyForCleanup; }
         }
 
-        private bool m_ReadyForCleanup;
-
         public StateHandle parentState
         {
             get { return m_ParentState; }
         }
-
-        public StateHandle m_ParentState;
 
         public bool enabledDirty { get { return m_EnabledDirty; } }
         public bool weightDirty { get { return m_WeightDirty; } }
@@ -503,11 +522,7 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             m_WeightDirty = false;
         }
 
-        private bool m_WeightDirty;
-        private bool m_EnabledDirty;
-
         public void InvalidateTime() { m_TimeIsUpToDate = false; }
-        private bool m_TimeIsUpToDate;
     }
 
     private StateHandle StateInfoToHandle(StateInfo info)

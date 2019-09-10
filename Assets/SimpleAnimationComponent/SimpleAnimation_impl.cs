@@ -145,6 +145,7 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
         public bool defaultState;
     }
 
+    // 开始播放
     protected void Kick()
     {
         if (!m_IsPlaying)
@@ -209,21 +210,30 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
         m_Initialized = false;
     }
 
+
+    // 初始化
     private void Initialize()
     {
         if (m_Initialized)
             return;
 
+        // 设置Animator
         m_Animator = GetComponent<Animator>();
         m_Animator.updateMode = m_AnimatePhysics ? AnimatorUpdateMode.AnimatePhysics : AnimatorUpdateMode.Normal;
         m_Animator.cullingMode = m_CullingMode;
+
+        // 创建PlayableGraph
         m_Graph = PlayableGraph.Create();
         m_Graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
-        SimpleAnimationPlayable template = new SimpleAnimationPlayable();
 
+        // 创建ScriptPlayable<SimpleAnimationPlayable>
+        SimpleAnimationPlayable template = new SimpleAnimationPlayable();
         var playable = ScriptPlayable<SimpleAnimationPlayable>.Create(m_Graph, template, 1);
         m_Playable = playable.GetBehaviour();
         m_Playable.onDone += OnPlayableDone;
+
+        // 如果没有EditorState
+        // 设置一个 
         if (m_States == null)
         {
             m_States = new EditorState[1];
@@ -233,6 +243,8 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
         }
 
 
+        // 根据编辑器上设置
+        // 添加Clip
         if (m_States != null)
         {
             foreach (var state in m_States)
@@ -261,6 +273,7 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
         }
     }
 
+    // 初始化
     protected virtual void Awake()
     {
         Initialize();
@@ -304,6 +317,7 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
         return defaultState;
     }
 
+    // 检查是否是旧动画Clip
     static void LegacyClipCheck(AnimationClip clip)
     {
         if (clip && clip.legacy)

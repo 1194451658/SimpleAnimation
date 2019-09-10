@@ -7,6 +7,8 @@ using UnityEngine.Playables;
 [RequireComponent(typeof(Animator))]
 public partial class SimpleAnimation: MonoBehaviour
 {
+    // 动作状态
+    // Q: 同SimpleAnimationPlayable_States.cs中的IState
     public interface State
     {
         bool enabled { get; set; }
@@ -21,6 +23,8 @@ public partial class SimpleAnimation: MonoBehaviour
         WrapMode wrapMode { get; set; }
 
     }
+
+    // 缓存控制的Animator
     public Animator animator
     {
         get
@@ -33,12 +37,21 @@ public partial class SimpleAnimation: MonoBehaviour
         }
     }
 
+    // 封装Animator.updateMode
+    // 在物理Loop中进行动画更新
+    // When turned on, animations will be executed in the physics loop.
+    // This is only useful in conjunction with kinematic rigidbodies.
     public bool animatePhysics
     {
+        // 在SimpleAnimation_impl.cs中定义
         get { return m_AnimatePhysics; }
-        set { m_AnimatePhysics = value; animator.updateMode = m_AnimatePhysics ? AnimatorUpdateMode.AnimatePhysics : AnimatorUpdateMode.Normal; }
+        set {
+            m_AnimatePhysics = value;
+            animator.updateMode = m_AnimatePhysics ? AnimatorUpdateMode.AnimatePhysics : AnimatorUpdateMode.Normal; 
+        }
     }
 
+    // 封装Animator.cullingMode
     public AnimatorCullingMode cullingMode
     {
         get { return animator.cullingMode; }
@@ -71,6 +84,7 @@ public partial class SimpleAnimation: MonoBehaviour
 
     public void AddClip(AnimationClip clip, string newName)
     {
+        // 检查是否是旧动画
         LegacyClipCheck(clip);
         AddState(clip, newName);
     }
@@ -124,6 +138,8 @@ public partial class SimpleAnimation: MonoBehaviour
     public bool Play()
     {
         m_Animator.enabled = true;
+
+        // 开始播放
         Kick();
         if (m_Clip != null && m_PlayAutomatically)
         {
