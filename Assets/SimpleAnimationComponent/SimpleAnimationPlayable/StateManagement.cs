@@ -23,6 +23,7 @@ public class StateManagement
         m_States = new List<StateInfo>();
     }
 
+    // 创建状态
     public StateInfo InsertState()
     {
         StateInfo state = new StateInfo();
@@ -35,6 +36,7 @@ public class StateManagement
         }
         else
         {
+            // Q: ?怎么插入的？
             m_States.Insert(firstAvailable, state);
         }
 

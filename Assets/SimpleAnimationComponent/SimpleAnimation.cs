@@ -173,7 +173,6 @@ public partial class SimpleAnimation: MonoBehaviour
         {
             RebuildStates();
         }
-       
     }
 
     public void Rewind()

@@ -18,7 +18,6 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
         get { return m_States; }
     }
 
-
     public bool keepStoppedPlayablesConnected
     {
         get { return m_KeepStoppedPlayablesConnected; }
@@ -115,6 +114,8 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
             m_Mixer.SetInputCount(index + 1);
         }
 
+        // 根据Clip，
+        // 创建对应AnimationClipPlayable
         var clipPlayable = AnimationClipPlayable.Create(graph, clip);
         clipPlayable.SetApplyFootIK(false);
         clipPlayable.SetApplyPlayableIK(false);
@@ -122,6 +123,8 @@ public partial class SimpleAnimationPlayable : PlayableBehaviour
         {
             clipPlayable.SetDuration(clip.length);
         }
+
+        // Playble设置到State
         newState.SetPlayable(clipPlayable);
         newState.Pause();
 

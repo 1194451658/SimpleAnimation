@@ -10,17 +10,8 @@ using UnityEngine.Playables;
 [RequireComponent(typeof(Animator))]
 public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
 {
+    // 默认状态名称
     const string kDefaultStateName = "Default";
-    
-    // 开始播放
-    public void Kick()
-    {
-        if (!m_IsPlaying)
-        {
-            m_Graph.Play();
-            m_IsPlaying = true;
-        }
-    }
 
     protected PlayableGraph m_Graph;
     protected PlayableHandle m_LayerMixer;
@@ -30,11 +21,6 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
     protected bool m_IsPlaying;
 
     protected SimpleAnimationPlayable m_Playable;
-
-    public SimpleAnimationPlayable Playable
-    {
-        get { return m_Playable; }
-    }
 
     [SerializeField]
     protected bool m_PlayAutomatically = true;
@@ -48,11 +34,23 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
     [SerializeField]
     protected WrapMode m_WrapMode;
 
+    // 默认Cilp
     [SerializeField]
     protected AnimationClip m_Clip;
 
     [SerializeField]
     private EditorState[] m_States;
+
+    public SimpleAnimationPlayable Playable
+    {
+        get { return m_Playable; }
+    }
+
+    // 初始化
+    protected virtual void Awake()
+    {
+        Initialize();
+    }
 
     protected virtual void OnEnable()
     {
@@ -116,6 +114,7 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
 
 
         // 根据编辑器上设置
+        // 在SimpleAnimationPlayable上
         // 添加Clip
         if (m_States != null)
         {
@@ -128,29 +127,42 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
             }
         }
 
+        // 创建默认的播放状态Default
         EnsureDefaultStateExists();
 
+        // Q: ??
         AnimationPlayableUtilities.Play(m_Animator, m_Playable.playable, m_Graph);
+
         Play();
         Kick();
         m_Initialized = true;
     }
 
+    // 保证有一个默认的状态
+    // Default
     private void EnsureDefaultStateExists()
     {
-        if ( m_Playable != null && m_Clip != null && m_Playable.GetState(kDefaultStateName) == null )
+        if ( m_Playable != null &&
+            m_Clip != null &&
+            m_Playable.GetState(kDefaultStateName) == null )
         {
             m_Playable.AddClip(m_Clip, kDefaultStateName);
             Kick();
         }
     }
 
-    // 初始化
-    protected virtual void Awake()
+
+    // 开始播放
+    public void Kick()
     {
-        Initialize();
+        if (!m_IsPlaying)
+        {
+            m_Graph.Play();
+            m_IsPlaying = true;
+        }
     }
 
+    // 销毁Graph
     protected void OnDestroy()
     {
         if (m_Graph.IsValid())
@@ -165,8 +177,11 @@ public partial class SimpleAnimation: MonoBehaviour, IAnimationClipSource
         m_IsPlaying = false;
     }
 
+    // 遍历Playable中状态
+    // 重新构建在Inspector中
     private void RebuildStates()
     {
+        // 遍历Playable中的状态
         var playableStates = GetStates();
         var list = new List<EditorState>();
         foreach (var state in playableStates)

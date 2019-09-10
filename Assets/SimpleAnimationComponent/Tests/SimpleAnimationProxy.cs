@@ -128,6 +128,7 @@ public class SimpleAnimationProxy : MonoBehaviour, IAnimation
     {
         get { return false; }
     }
+
     new public GameObject gameObject
     {
         get { return impl.gameObject; }
@@ -226,6 +227,5 @@ public class SimpleAnimationProxy : MonoBehaviour, IAnimation
     {
         get { return GetState(name); }
     }
-
-
 }
+

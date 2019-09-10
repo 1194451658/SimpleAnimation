@@ -66,6 +66,93 @@ public class StateInfo
         get { return m_WrapMode; }
     }
 
+    public bool enabled
+    {
+        get { return m_Enabled; }
+    }
+
+    public int index
+    {
+        get { return m_Index; }
+        set
+        {
+            Debug.Assert(m_Index == 0, "Should never reassign Index");
+            m_Index = value;
+        }
+    }
+
+    public bool fading
+    {
+        get { return m_Fading; }
+    }
+
+    public float targetWeight
+    {
+        get { return m_TargetWeight; }
+    }
+
+    public float weight
+    {
+        get { return m_Weight; }
+    }
+
+    public float fadeSpeed
+    {
+        get { return m_FadeSpeed; }
+    }
+
+    public float speed
+    {
+        get { return (float) m_Playable.GetSpeed(); }
+        set { m_Playable.SetSpeed(value); }
+    }
+
+    public float playableDuration
+    {
+        get { return (float) m_Playable.GetDuration(); }
+    }
+
+    public void SetPlayable(Playable playable)
+    {
+        m_Playable = playable;
+    }
+
+    public bool isDone
+    {
+        get { return m_Playable.IsDone(); }
+    }
+
+    public Playable playable
+    {
+        get { return m_Playable; }
+    }
+
+    //Clone information
+    public bool isClone
+    {
+        get { return m_IsClone; }
+    }
+
+    public bool isReadyForCleanup
+    {
+        get { return m_ReadyForCleanup; }
+    }
+
+    public StateHandle parentState
+    {
+        get { return m_ParentState; }
+    }
+
+    public bool enabledDirty
+    {
+        get { return m_EnabledDirty; }
+    }
+
+    public bool weightDirty
+    {
+        get { return m_WeightDirty; }
+    }
+
     public void Initialize(string name, AnimationClip clip, WrapMode wrapMode)
     {
         m_StateName = name;
@@ -171,94 +258,6 @@ public class StateInfo
     {
         m_ParentState = handle;
         m_IsClone = true;
-    }
-
-    public bool enabled
-    {
-        get { return m_Enabled; }
-    }
-
-
-    public int index
-    {
-        get { return m_Index; }
-        set
-        {
-            Debug.Assert(m_Index == 0, "Should never reassign Index");
-            m_Index = value;
-        }
-    }
-
-    public bool fading
-    {
-        get { return m_Fading; }
-    }
-
-    public float targetWeight
-    {
-        get { return m_TargetWeight; }
-    }
-
-    public float weight
-    {
-        get { return m_Weight; }
-    }
-
-    public float fadeSpeed
-    {
-        get { return m_FadeSpeed; }
-    }
-
-    public float speed
-    {
-        get { return (float) m_Playable.GetSpeed(); }
-        set { m_Playable.SetSpeed(value); }
-    }
-
-    public float playableDuration
-    {
-        get { return (float) m_Playable.GetDuration(); }
-    }
-
-    public void SetPlayable(Playable playable)
-    {
-        m_Playable = playable;
-    }
-
-    public bool isDone
-    {
-        get { return m_Playable.IsDone(); }
-    }
-
-    public Playable playable
-    {
-        get { return m_Playable; }
-    }
-
-    //Clone information
-    public bool isClone
-    {
-        get { return m_IsClone; }
-    }
-
-    public bool isReadyForCleanup
-    {
-        get { return m_ReadyForCleanup; }
-    }
-
-    public StateHandle parentState
-    {
-        get { return m_ParentState; }
-    }
-
-    public bool enabledDirty
-    {
-        get { return m_EnabledDirty; }
-    }
-
-    public bool weightDirty
-    {
-        get { return m_WeightDirty; }
     }
 
     public void ResetDirtyFlags()

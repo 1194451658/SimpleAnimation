@@ -17,6 +17,7 @@ public interface IAnimationState
     WrapMode wrapMode { get; set; }
 
 }
+
 public interface IAnimation
 {
     //Should animations apply velocities to physics objects

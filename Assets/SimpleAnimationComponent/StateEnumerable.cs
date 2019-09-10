@@ -6,16 +6,20 @@ using UnityEngine;
 public class StateEnumerable : IEnumerable<State>
 {
     private SimpleAnimation m_Owner;
+
     public StateEnumerable(SimpleAnimation owner)
     {
         m_Owner = owner;
     }
 
+    // 获取Enumerator
     public IEnumerator<State> GetEnumerator()
     {
         return new StateEnumerator(m_Owner);
     }
 
+    // 获取Enumerator
+    // 实现的接口!
     IEnumerator IEnumerable.GetEnumerator()
     {
         return new StateEnumerator(m_Owner);
@@ -24,16 +28,23 @@ public class StateEnumerable : IEnumerable<State>
     class StateEnumerator : IEnumerator<State>
     {
         private SimpleAnimation m_Owner;
+
+        // 再封装住IStateEnumerator
         private IEnumerator<IState> m_Impl;
+
         public StateEnumerator(SimpleAnimation owner)
         {
             m_Owner = owner;
+            // 从Playble中返回状态
+            // 返回的是IStateEnumerable
+            // IStateEnumerator
             m_Impl = m_Owner.Playable.GetStates().GetEnumerator();
             Reset();
         }
 
         State GetCurrent()
         {
+            // StateImpl:把IState变成State
             return new StateImpl(m_Impl.Current, m_Owner);
         }
 

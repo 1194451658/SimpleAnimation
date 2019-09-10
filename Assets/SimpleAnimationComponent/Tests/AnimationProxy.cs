@@ -5,7 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animation))]
 public class AnimationProxy : MonoBehaviour, IAnimation
 {
-
+    // 封装AnimationState到
+    // IAnimationState
     private class AnimationStateProxy: IAnimationState
     {
         public AnimationStateProxy(AnimationState state)
@@ -31,11 +32,13 @@ public class AnimationProxy : MonoBehaviour, IAnimation
             get { return m_State.time; }
             set { m_State.time = value; }
         }
+
         public float normalizedTime
         {
             get { return m_State.normalizedTime; }
             set { m_State.normalizedTime = value; }
         }
+
         public float speed
         {
             get { return m_State.speed; }
@@ -47,11 +50,13 @@ public class AnimationProxy : MonoBehaviour, IAnimation
             get { return m_State.name; }
             set { m_State.name = value; }
         }
+
         public float weight
         {
             get { return m_State.weight; }
             set { m_State.weight = value; }
         }
+
         public float length
         {
             get { return m_State.length; }
@@ -69,6 +74,7 @@ public class AnimationProxy : MonoBehaviour, IAnimation
         }
     }
 
+    // 旧动画系统Animation
     private Animation m_Animation;
 
     new private Animation animation
@@ -89,11 +95,14 @@ public class AnimationProxy : MonoBehaviour, IAnimation
         set { animation.animatePhysics = value; }
     }
 
+    // 把Animation的cullingType，
+    // 转换成Animator的cullingType
     public AnimatorCullingMode cullingMode
     {
         get
         {
             AnimatorCullingMode mode;
+
             switch (animation.cullingType)
             {
                 case AnimationCullingType.AlwaysAnimate:
@@ -153,6 +162,7 @@ public class AnimationProxy : MonoBehaviour, IAnimation
     {
         get { return true; }
     }
+
     new public GameObject gameObject
     {
         get { return animation.gameObject; }
@@ -238,6 +248,7 @@ public class AnimationProxy : MonoBehaviour, IAnimation
         animation.Rewind(stateName);
     }
 
+    // 获取状态
     public IAnimationState GetState(string stateName)
     {
         AnimationState state = animation[stateName];
@@ -251,6 +262,5 @@ public class AnimationProxy : MonoBehaviour, IAnimation
     {
         get { return GetState(name); }
     }
-
-
 }
+
