@@ -41,7 +41,11 @@ public partial class SimpleAnimation: MonoBehaviour
         set { m_CullingMode = value;  animator.cullingMode = m_CullingMode; }
     }
 
-    public bool isPlaying { get { return m_Playable.IsPlaying(); } }
+    public bool isPlaying {
+        get {
+            return m_Playable.IsPlaying(); 
+        } 
+    }
 
     public bool playAutomatically
     {
